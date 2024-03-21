@@ -1,0 +1,18 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/trusty64"
+  config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+    vb.cpus = 2
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+    # Instala o servidor web nginx
+    sudo apt-get update
+    sudo apt-get install -y nginx
+
+    # Cria um arquivo index.html personalizado
+    echo "<html><head><title>Olá mundo</title></head><body><h1>Olá mundo!</h1></body></html>" | sudo tee /usr/share/nginx/html/index.html
+  SHELL
+end
