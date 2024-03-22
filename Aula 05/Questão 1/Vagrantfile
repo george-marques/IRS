@@ -1,0 +1,44 @@
+Vagrant.configure("2") do |config|  # Inicia a configuração do Vagrant com a versão "2"
+  # Máquina 1 - FTP Server
+ config.vm.define "ftp_server" do |ftp|  # Define uma máquina virtual com o nome "ftp_server"
+   ftp.vm.box = "ubuntu/bionic64"  # Define a imagem da VM como 
+   ftp.vm.network "public_network"  # Configura a rede da VM como pública
+   
+   ftp.vm.provision "shell", inline: <<-SHELL  # Provisão da VM usando um script shell
+     sudo apt-get update  # Atualiza os pacotes disponíveis no sistema
+     sudo apt-get install -y vsftpd  # Instala o servidor FTP vsftpd
+
+     sudo sed -i 's/anonymous_enable=NO/anonymous_enable=YES/' /etc/vsftpd.conf  # Habilita o acesso anônimo no servidor FTP
+     sudo sed -i 's/#write_enable=YES/write_enable=YES/' /etc/vsftpd.conf  # Habilita a escrita de arquivos no servidor FTP
+     sudo systemctl restart vsftpd  # Reinicia o serviço vsftpd para aplicar as alterações
+
+     sudo useradd -m george  # Cria um novo usuário chamado "george" com diretório home
+     echo "george:12345" | sudo chpasswd  # Define a senha do usuário
+
+     sudo mkdir /home/george/files  # Cria um diretório para armazenar os arquivos do usuário 
+     sudo chown george:george /home/george/files  # Define o dono do diretório
+     sudo chmod 755 /home/george/files  # Define as permissões do diretório para que o usuário possa ler e escrever
+     echo "local_root=/home/george/files" | sudo tee -a /etc/vsftpd.conf  # Define o diretório raiz do usuário no arquivo de configuração do vsftpd
+     sudo systemctl restart vsftpd  # Reinicia o serviço vsftpd para aplicar as alterações
+   SHELL
+ end
+ 
+ # Máquina 2 - MySQL Server
+ config.vm.define "mysql_server" do |mysql_config|
+   mysql_config.vm.box = "ubuntu/trusty64"
+   mysql_config.vm.network "forwarded_port", guest: 3306, host: 3307 # Alterado o host para evitar conflito com a máquina FTP
+   mysql_config.vm.network "private_network", ip: "192.168.50.12"
+   mysql_config.vm.provision "shell", inline: <<-SHELL
+
+ # Instalar MySQL Server
+   sudo apt-get update
+   sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password rootpass'
+   sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password rootpass'
+   sudo apt-get install -y mysql-server
+
+   # Criar banco de dados e tabela
+   sudo mysql -uroot -prootpass -e "CREATE DATABASE empresa;"
+   sudo mysql -uroot -prootpass -e "USE empresa; CREATE TABLE funcionarios (id INT AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(255), cargo VARCHAR(255));"
+ SHELL
+ end
+end
