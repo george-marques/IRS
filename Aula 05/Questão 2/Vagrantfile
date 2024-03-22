@@ -1,0 +1,62 @@
+# Inicia a configuração do Vagrant com a versão 2
+Vagrant.configure("2") do |config|
+  # Define o caminho da pasta compartilhada
+  shared_folder_path = "./website"
+
+  # Define uma máquina virtual
+  config.vm.define "maquina1" do |vm1|
+    # Especifica a imagem da caixa a ser usada para esta máquina virtual
+    vm1.vm.box = "ubuntu/bionic64"
+    # Configura a rede da máquina virtual como uma rede privada
+    vm1.vm.network "private_network", ip: "192.168.50.4"
+    # Configura a pasta compartilhada entre o host e a máquina virtual
+    vm1.vm.synced_folder shared_folder_path, "/var/www/html"
+    # Provisiona a máquina virtual usando um script shell embutido
+    vm1.vm.provision "shell", inline: <<-SHELL
+      # Atualiza a lista de pacotes disponíveis para download
+      sudo apt-get update
+      # Instala o servidor web nginx
+      sudo apt-get install -y nginx
+      # Reinicia o serviço nginx para aplicar as configurações
+      sudo systemctl restart nginx
+    SHELL
+  end
+
+  # Define uma máquina virtual
+  config.vm.define "maquina2" do |vm2|
+    # Especifica a imagem da caixa a ser usada para esta máquina virtual
+    vm2.vm.box = "ubuntu/bionic64"
+    # Configura a rede da máquina virtual como uma rede pública
+    vm2.vm.network "public_network"
+    # Configura a pasta compartilhada entre o host e a máquina virtual
+    vm2.vm.synced_folder shared_folder_path, "/var/www/html"
+    # Provisiona a máquina virtual usando um script shell embutido
+    vm2.vm.provision "shell", inline: <<-SHELL
+      # Atualiza a lista de pacotes disponíveis para download
+      sudo apt-get update
+      # Instala o servidor web nginx
+      sudo apt-get install -y nginx
+      # Reinicia o serviço nginx para aplicar as configurações
+      sudo systemctl restart nginx
+    SHELL
+  end
+
+  # Define uma máquina virtual
+  config.vm.define "maquina3" do |vm3|
+    # Especifica a imagem da caixa a ser usada para esta máquina virtual
+    vm3.vm.box = "ubuntu/bionic64"
+    # Configura a rede da máquina virtual com uma porta encaminhada do host para a máquina virtual
+    vm3.vm.network "forwarded_port", guest: 80, host: 8080
+    # Configura a pasta compartilhada entre o host e a máquina virtual
+    vm3.vm.synced_folder shared_folder_path, "/var/www/html"
+    # Provisiona a máquina virtual usando um script shell embutido
+    vm3.vm.provision "shell", inline: <<-SHELL
+      # Atualiza a lista de pacotes disponíveis para download
+      sudo apt-get update
+      # Instala o servidor web nginx
+      sudo apt-get install -y nginx
+      # Reinicia o serviço nginx para aplicar as configurações
+      sudo systemctl restart nginx
+    SHELL
+  end
+end
