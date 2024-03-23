@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Atualiza os pacotes do APT
+      apt:
+        update_cache: yes
+
+    - name: Instalação do MySQL Server
+      apt:
+        name: mysql-server
+        state: present
+
+    - name: Iniciar o serviço MySQL
+      service:
+        name: mysql
+        state: started
