@@ -1,0 +1,41 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "web1" do |web1|
+    web1.vm.box = "ubuntu/bionic64"
+    web1.vm.hostname = "web1"
+    web1.vm.network "private_network", ip: "192.168.50.11"
+    web1.vm.provision "shell", path: "nginx1.sh"
+  end
+
+  config.vm.define "web2" do |web2|
+    web2.vm.box = "ubuntu/bionic64"
+    web2.vm.hostname = "web2"
+    web2.vm.network "private_network", ip: "192.168.50.12"
+    web2.vm.provision "shell", path: "nginx2.sh"
+  end
+
+  config.vm.define "web3" do |web3|
+    web3.vm.box = "ubuntu/bionic64"
+    web3.vm.hostname = "web3"
+    web3.vm.network "private_network", ip: "192.168.50.13"
+    web3.vm.provision "shell", path: "apache.sh"
+  end
+
+  config.vm.define "lb1" do |lb1|
+    lb1.vm.box = "ubuntu/bionic64"
+    lb1.vm.hostname = "lb1"
+    lb1.vm.network "private_network", ip: "192.168.50.21"
+    lb1.vm.provision "shell", path: "provision_lb.sh"
+  end
+
+  config.vm.define "lb2" do |lb2|
+    lb2.vm.box = "ubuntu/bionic64"
+    lb2.vm.hostname = "lb2"
+    lb2.vm.network "private_network", ip: "192.168.50.22"
+    lb2.vm.provision "shell", path: "provision_lb.sh"
+  end
+
+end
