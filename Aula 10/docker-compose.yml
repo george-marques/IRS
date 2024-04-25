@@ -1,0 +1,90 @@
+version: '3.7'
+
+# Inicia os serviços
+services:
+
+  # Defina o serviço 'wordpress'.
+  wordpress:
+    # Imagem do Wordpress.
+    image: wordpress
+    # Expor a porta 8080 para comunicação dentro da rede.
+    expose:
+      - 8080    
+    ports:
+      # Mapeie a porta 8080 do host para a porta 80 do contêiner para acesso externo.
+      - 8080:80    
+    networks:
+      # Conecte-se à rede 'interna' para comunicação.
+      - internal  
+    # Defina variáveis ​​de ambiente para o serviço WordPress.
+    environment:
+      # Defina o host do banco de dados
+      WORDPRESS_DB_HOST: mariadb
+      # Define nome do banco
+      WORDPRESS_DB_NAME: unitins_db
+      # Define senha do banco
+      WORDPRESS_DB_USER: unitins
+      WORDPRESS_DB_PASSWORD: unitins           
+    volumes:
+      # Monte um diretório local como um volume no contêiner.
+      - ./wordpress:/var/www/html
+
+  # Define serviço MariaDB.
+  mariadb:
+    # Use a imagem oficial do MariaDB Docker.
+    image: mariadb    
+    expose:
+      # Exponha a porta 3306 para comunicação dentro da rede.
+      - 3306    
+    ports:
+      # Mapeie a porta do host 3306 para a porta do contêiner 3306 para acesso externo.
+      - 3306:3306    
+    networks:
+      # Conecte-se à rede 'interna' para comunicação.
+      - internal
+    # Defina variáveis ​​de ambiente para o serviço MariaDB.
+    environment:
+      # Criando banco de dados Wordpress
+      MYSQL_DATABASE: unitins_db
+      #Cria usuário + senha do Wordpress
+      MYSQL_USER: unitins
+      MYSQL_PASSWORD: unitins 
+      # Defina a senha root do banco de dados
+      MYSQL_ROOT_PASSWORD: unitins 
+         
+    volumes:
+      # Monte um diretório local como um volume no contêiner.
+      - ./db:/var/lib/mysql
+
+  # Defina o serviço 'pma' para phpMyAdmin.
+  pma: 
+    # Use a imagem oficial do phpMyAdmin Docker.
+    image: phpmyadmin
+    # Certifique-se de que o contêiner seja reiniciado automaticamente se parar.
+    restart: always
+    # Exponha a porta 8181 para comunicação dentro da rede.
+    expose:
+      - 8181
+    # Mapeie a porta do host 8181 para a porta do contêiner 80 para acesso externo.
+    ports:
+      - 8181:80 
+    
+    networks:
+      - internal 
+    # Defina variáveis ​​de ambiente para o serviço phpMyAdmin.
+    environment:
+      # Desativa a conexão arbitrária do servidor; use o host e a porta configurados
+      - PMA_ARBITRARY=0 
+      # Define o host para o phpMyAdmin se conectar
+      - PMA_HOST=mariadb
+      # Define a porta para o phpMyAdmin se conectar
+      - PMA_PORT=3306
+
+# Define a rede 'interna' para comunicação entre contêineres.
+networks:
+  internal:
+
+# Define volumes nomeados para armazenamento de dados.
+volumes:
+  wordpress:
+  db:
