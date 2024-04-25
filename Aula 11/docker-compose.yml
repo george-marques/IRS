@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  web:
+    build: ./frontend
+    depends_on:
+      - database
+    ports:
+      - "8080:80"
+
+  api:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - database
+
+  database:
+    image: postgres:latest
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_DB: meubanco
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: senha
+  
+
