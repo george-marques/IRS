@@ -13,6 +13,14 @@ Esse servidor web deve estar disponível para ser acessado através do navegador
 # Aula 06
 Configuração de Ambiente de Desenvolvimento com Vagrant e Ansible e Configurar a sincronização de uma pasta local e mudar a página inicial do Nginx.
 
+# Aula 07 - 
+1. Utilizando o Vagrant e o Ansible, automatize a criação de duas máquinas virtuais:
+    - uma com o servidor web Nginx instalado
+    - uma com o SGBD Mysql-server instalado
+      
+2. Utilizando o Vagrant e o Virtualbox, crie um laboratório com 5 máquinas virtuais: 3 servidores web (2 Nginx e 1 Apache) e dois balanceadores de carga. Nesse ambiente, configurem os balanceadores de carga para que cada solicitação de acesso ao ip configurado para
+responder pelo servidor web, uma máquina virtual distinta com servidor web responda. Para isso, configure o IPVS com o algoritmo Round Robin.
+
 # Aula 10
 
 Utilizando docker compose, crie uma aplicação que possua os seguintes contêiners:
