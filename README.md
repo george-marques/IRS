@@ -13,7 +13,7 @@ Esse servidor web deve estar disponível para ser acessado através do navegador
 # Aula 06
 Configuração de Ambiente de Desenvolvimento com Vagrant e Ansible e Configurar a sincronização de uma pasta local e mudar a página inicial do Nginx.
 
-# Aula 07 - 
+# Aula 07  
 1. Utilizando o Vagrant e o Ansible, automatize a criação de duas máquinas virtuais:
     - uma com o servidor web Nginx instalado
     - uma com o SGBD Mysql-server instalado
@@ -42,3 +42,25 @@ Crie uma estrutura com 3 containers para uma aplicação com Back-End, Front-End
 - database:
     - init.sql
 - docker-compose.yml
+
+
+# Aula 12 
+
+1. Sistema de registro de comunicação utilizando docker:
+
+Você é um desenvolvedor e está trabalhando em uma empresa que está precisando melhorar a forma de
+comunicação entre os membros das equipes. Muitos problemas têm acontecido devido a erro de
+comunicação ou mensagens que não chegaram às pessoas que precisavam. A empresa não quer utilizar
+nenhum software de terceiros. Por isso escolheu você como chefe de uma equipe que desenvolverá uma
+solução proprietária para ser utilizada internamente. O que ficou especificado é que os membros de uma
+equipe podem visualizar todas as mensagens e fazer novas postagens na página de um projeto. Porém
+ninguém pode apagar as mensagens. É importante que fique registrado a data de cada postagem. Esse
+serviço deve estar disponível a todos os hosts da rede local.
+Como se trata de um aplicativo web com várias camadas, foi pedido para ser utilizado a orquestração de
+microsserviços, devido a sua flexibilidade, leveza e capacidade de se adaptar ao cenário em questão.
+
+2. Utilizando o Terraform, crie uma instância EC2 que, após o provisionamento, seja exibido no terminal o ID e
+o IP público da instância. Para tal, criem um arquivo com o nome de ouptuts.tf com tais configurações.
+
+
+   
